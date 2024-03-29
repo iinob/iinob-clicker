@@ -22,8 +22,8 @@ int autopower = 0;
 double autospeed = 5;
 // hashkey value does not matter, it is just used to make it much harder to change the save values
 // set useSaving to true to enable modified save detection
-int hashKey = 0;
-bool useSaving = false;
+int hashKey = 39;
+bool useSaving = true;
 
 
 // initlize items here, make sure to put them in the hashmap so the shop can access them
@@ -31,11 +31,13 @@ item gobump("gobump", 69, 2, 0, 0);
 item clown("call-the-clown", -350, -10, 0, 0);
 item balls("xanders-hairy-balls", 10000000, 1000000, 0, 0);
 item goons("hire-goons", 500, 0, 0, 150);
+item evan("evans-statues", 420, 0, 0.05, 0);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
 	{"xanders-hairy-balls", &balls},
-	{"hire-goons", &goons}
+	{"hire-goons", &goons},
+	{"evans-statues", &evan}
 };
 
 void shop() {
@@ -122,7 +124,7 @@ std::ifstream file("data.json");
 // check save if useSaving is true
 if (useSaving) {
     std::string savehash = data["savehash"];
-	if (md5(std::to_string(score + clickpower + hashKey)) != savehash) {
+	if (md5(std::to_string(score + clickpower + autospeed + autopower + hashKey)) != savehash) {
 		std::cout << "\nchanging data.json is against the rules\n\nBIDEN BLAST!!!" << std::endl;
 		score = 0;
 		clickpower = 0;
