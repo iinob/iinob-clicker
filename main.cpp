@@ -6,6 +6,7 @@
 #include <csignal>
 #include <thread>
 #include <unistd.h>
+#include <cmath>
 #include "wares.hpp"
 #include "hash.hpp"
 #include "json.hpp"
@@ -32,12 +33,14 @@ item clown("call-the-clown", -350, -10, 0, 0);
 item balls("xanders-hairy-balls", 10000000, 1000000, 0, 0);
 item goons("hire-goons", 500, 0, 0, 150);
 item evan("evans-statues", 420, 0, 0.05, 0);
+item fortnite("19-dollar-fortnite-card", 19, 1, 0, 0);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
 	{"xanders-hairy-balls", &balls},
 	{"hire-goons", &goons},
-	{"evans-statues", &evan}
+	{"evans-statues", &evan},
+	{"19-dollar-fortnite-card", &fortnite}
 };
 
 void shop() {
@@ -61,6 +64,7 @@ clickpower += (*(items[shopIn])).getpower();
 autospeed -= (*(items[shopIn])).getautospeed();
 autopower += (*(items[shopIn])).getautopower();
 std::cout << "Thank you for buying " << (*(items[shopIn])).getname() << std::endl;
+items.erase(shopIn);
 } else {
 std::cout << "You don't have enough points. (poor)" << std::endl;
 }
@@ -79,11 +83,16 @@ score += autopower;
 }
 
 
-
 // writes to data.json
 void jwrite() {
+//autospeed = std::round(autospeed * 100) / 100;
 std::cout << "\nsaving...\n";
 json data;
+std::vector<std::string> keys;
+for (const auto& pair : items) {
+keys.push_back(pair.first);
+}
+data["keys"] = keys;
 data["score"] = std::to_string(score);
 // save the hash only if it's enabled
 // I don't know how autospeed will work because trying to hash a float has been problematic in the past
@@ -116,11 +125,19 @@ std::ifstream file("data.json");
     file.close();
 
     // get json
-    score = std::stoi(data["score"].get<std::string>());
-    clickpower = std::stoi(data["power"].get<std::string>());
-    autospeed = std::stoi(data["autospeed"].get<std::string>());
-    autopower = std::stoi(data["autopower"].get<std::string>());
+    score = std::stod(data["score"].get<std::string>());
+    clickpower = std::stod(data["power"].get<std::string>());
+    autospeed = std::stod(data["autospeed"].get<std::string>());
+    autopower = std::stod(data["autopower"].get<std::string>());
+    std::vector<std::string> keys = data["keys"];
 
+    for (int i = 0; i < keys.size(); i++) {
+	if (items.count(keys[i])) {
+	std::cout << "has " << keys[i] << std::endl;
+} else {
+	std::cout << "not " << keys[i] << std::endl;
+}
+}
 // check save if useSaving is true
 if (useSaving) {
     std::string savehash = data["savehash"];
