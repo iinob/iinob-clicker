@@ -25,6 +25,8 @@ double autospeed = 5;
 int hashKey = 0;
 bool useSaving = false;
 
+
+// initlize items here, make sure to put them in the hashmap so the shop can access them
 item gobump("gobump", 69, 2, 0, 0);
 item clown("call-the-clown", -350, -10, 0, 0);
 item balls("xanders-hairy-balls", 10000000, 1000000, 0, 0);
@@ -38,11 +40,14 @@ std::map<std::string, item*> items {
 
 void shop() {
 std::cout << "welcome to the shop\nyou have " << score << " points.\nWhat would you like to buy? " << std::endl;
+// display hashmap keys
 for (const auto& pair : items) {
                         std::cout << "- " << pair.first << std::endl;
     }
 std::string shopIn;
 std::cin >> shopIn;
+
+// check if item exists, if user wants to buy, if user has enough points to buy it
 if (items.count(shopIn)) {
 std::string yn;
 std::cout << (*(items[shopIn])).getname() << " costs " << (*(items[shopIn])).getcost() << " points. Do you want to buy it (y/n)? " << std::endl;
@@ -55,7 +60,7 @@ autospeed -= (*(items[shopIn])).getautospeed();
 autopower += (*(items[shopIn])).getautopower();
 std::cout << "Thank you for buying " << (*(items[shopIn])).getname() << std::endl;
 } else {
-std::cout << "You don't have enough points." << std::endl;
+std::cout << "You don't have enough points. (poor)" << std::endl;
 }
 }
 } else {
@@ -63,6 +68,7 @@ std::cout << "we don't have " << shopIn << std::endl;
 }
 }
 
+// adds autopower to score every {autospeed} seconds
 void autoclick() {
 while (true) {
 sleep(autospeed);
@@ -77,8 +83,10 @@ void jwrite() {
 std::cout << "\nsaving...\n";
 json data;
 data["score"] = std::to_string(score);
+// save the hash only if it's enabled
+// I don't know how autospeed will work because trying to hash a float has been problematic in the past
 if (useSaving) {
-data["savehash"] = md5(std::to_string(score + clickpower + hashKey));
+data["savehash"] = md5(std::to_string(score + clickpower + autospeed + autopower + hashKey));
 }
 data["power"] = std::to_string(clickpower);
 data["autospeed"] = std::to_string(autospeed);
@@ -111,6 +119,7 @@ std::ifstream file("data.json");
     autospeed = std::stoi(data["autospeed"].get<std::string>());
     autopower = std::stoi(data["autopower"].get<std::string>());
 
+// check save if useSaving is true
 if (useSaving) {
     std::string savehash = data["savehash"];
 	if (md5(std::to_string(score + clickpower + hashKey)) != savehash) {
@@ -124,6 +133,7 @@ if (useSaving) {
     std::cout << "jread: " << score << std::endl;
 }
 
+// if user uses ctrl+c, save before quitting
 // ctrl+c saving is broken on windows
 void signalHandler(int signal) {
 	jwrite();
@@ -131,7 +141,9 @@ void signalHandler(int signal) {
 }
 
 int main() {
+// start autoclick thread
 std::thread thread_obj(autoclick);
+// initialize signal handler
 signal(SIGINT, signalHandler);
 // check if data.json exists, make new one if not
 try {
@@ -146,10 +158,12 @@ std::string userIn;
 
 std::cout << "press enter for more points , q to quit, help for help, s for shop" << std::endl;
 
+// while true to keep the thingy going until the user wants to stop playing
 while (true) {
 std::cout << score << " pts" << std::endl;
    std::getline(std::cin, userIn);
 
+// check user input for keyword, add points if blank
     if (userIn.empty()) {
         score += clickpower;
     } else if (userIn == "q") {
