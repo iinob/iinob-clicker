@@ -26,7 +26,7 @@ int hashKey = 0;
 bool useSaving = false;
 
 item gobump("gobump", 69, 2, 0, 0);
-item clown("call-the-clown", -1000, -10, 0, 0);
+item clown("call-the-clown", -350, -10, 0, 0);
 item balls("xanders-hairy-balls", 10000000, 1000000, 0, 0);
 item goons("hire-goons", 500, 0, 0, 150);
 std::map<std::string, item*> items {
@@ -67,7 +67,6 @@ void autoclick() {
 while (true) {
 sleep(autospeed);
 score += autopower;
-std::cout << "autotest" << std::endl;
 }
 }
 
