@@ -17,6 +17,7 @@ using json = nlohmann::json;
 int score = 0;
 int clickpower = 1;
 // hashkey value does not matter, it is just used to make it much harder to change the save values
+// set useSaving to true to enable modified save detection
 int hashKey = 0;
 bool useSaving = false;
 
