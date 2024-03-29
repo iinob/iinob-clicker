@@ -14,7 +14,7 @@
 using json = nlohmann::json;
 
 // init saved variables here
-int score = 0;
+long long int score = 0;
 int clickpower = 1;
 // hashkey value does not matter, it is just used to make it much harder to change the save values
 int hashKey = 0;
@@ -22,9 +22,11 @@ bool useSaving = false;
 
 item gobump("gobump", 69, 999);
 item clown("call-the-clown", 1, -2);
+item balls("xanders-hairy-balls", 420, 1000000);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
-	{"call-the-clown", &clown}
+	{"call-the-clown", &clown},
+	{"xanders-hairy-balls", &balls}
 };
 
 void shop() {
