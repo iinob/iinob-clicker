@@ -13,11 +13,12 @@
 
 using json = nlohmann::json;
 
-// init variables here for compatability
+// init saved variables here
 int score = 0;
-int hashKey = 42069;
 int clickpower = 1;
-
+// hashkey value does not matter, it is just used to make it much harder to change the save values
+int hashKey = 0;
+bool useSaving = false;
 
 item gobump("gobump", 69, 999);
 item clown("call-the-clown", 1, -2);
@@ -57,7 +58,9 @@ void jwrite() {
 std::cout << "\nsaving...\n";
 json data;
 data["score"] = std::to_string(score);
+if (useSaving) {
 data["savehash"] = md5(std::to_string(score + clickpower + hashKey));
+}
 data["power"] = std::to_string(clickpower);
 std::ofstream file("data.json");
     file << std::setw(4) << data << std::endl;
@@ -83,18 +86,21 @@ std::ifstream file("data.json");
 
     // get json
     score = std::stoi(data["score"].get<std::string>());
-    std::string savehash = data["savehash"];
     clickpower = std::stoi(data["power"].get<std::string>());
+if (useSaving) {
+    std::string savehash = data["savehash"];
 	if (md5(std::to_string(score + clickpower + hashKey)) != savehash) {
 		std::cout << "\nchanging data.json is against the rules\n\nBIDEN BLAST!!!" << std::endl;
 		score = 0;
 		clickpower = 0;
 		jwrite();
 	}
+}
     // display json
     std::cout << "jread: " << score << std::endl;
 }
 
+// ctrl+c saving is broken on windows
 void signalHandler(int signal) {
 	jwrite();
 	exit(0);
