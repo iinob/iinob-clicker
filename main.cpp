@@ -28,7 +28,7 @@ bool useSaving = false;
 item gobump("gobump", 69, 2, 0, 0);
 item clown("call-the-clown", -1000, -10, 0, 0);
 item balls("xanders-hairy-balls", 10000000, 1000000, 0, 0);
-item goons("hire-goons", 150, 0, 0, 150);
+item goons("hire-goons", 500, 0, 0, 150);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
@@ -82,6 +82,8 @@ if (useSaving) {
 data["savehash"] = md5(std::to_string(score + clickpower + hashKey));
 }
 data["power"] = std::to_string(clickpower);
+data["autospeed"] = std::to_string(autospeed);
+data["autopower"] = std::to_string(autopower);
 std::ofstream file("data.json");
     file << std::setw(4) << data << std::endl;
     file.close();
@@ -107,6 +109,9 @@ std::ifstream file("data.json");
     // get json
     score = std::stoi(data["score"].get<std::string>());
     clickpower = std::stoi(data["power"].get<std::string>());
+    autospeed = std::stoi(data["autospeed"].get<std::string>());
+    autopower = std::stoi(data["autopower"].get<std::string>());
+
 if (useSaving) {
     std::string savehash = data["savehash"];
 	if (md5(std::to_string(score + clickpower + hashKey)) != savehash) {
