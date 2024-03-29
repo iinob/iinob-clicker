@@ -1,6 +1,7 @@
 wincompile
 compile
 .vscode
+*.json
 
 # Prerequisites
 *.d
