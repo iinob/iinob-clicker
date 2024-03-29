@@ -1,5 +1,6 @@
 wincompile
 compile
+iinobclicker
 .vscode
 *.json
 
@@ -35,3 +36,4 @@ compile
 *.exe
 *.out
 *.app
+*.bin
