@@ -4,6 +4,8 @@
 #include <vector>
 #include <fstream>
 #include <csignal>
+#include <thread>
+#include <unistd.h>
 #include "wares.hpp"
 #include "hash.hpp"
 #include "json.hpp"
@@ -16,18 +18,22 @@ using json = nlohmann::json;
 // init saved variables here
 long long int score = 0;
 int clickpower = 1;
+int autopower = 0;
+double autospeed = 5;
 // hashkey value does not matter, it is just used to make it much harder to change the save values
 // set useSaving to true to enable modified save detection
 int hashKey = 0;
 bool useSaving = false;
 
-item gobump("gobump", 69, 999);
-item clown("call-the-clown", 1, -2);
-item balls("xanders-hairy-balls", 420, 1000000);
+item gobump("gobump", 69, 2, 0, 0);
+item clown("call-the-clown", -1000, -10, 0, 0);
+item balls("xanders-hairy-balls", 10000000, 1000000, 0, 0);
+item goons("hire-goons", 150, 0, 0, 150);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
-	{"xanders-hairy-balls", &balls}
+	{"xanders-hairy-balls", &balls},
+	{"hire-goons", &goons}
 };
 
 void shop() {
@@ -45,6 +51,8 @@ if (yn == "y") {
 if (score >= (*(items[shopIn])).getcost()) {
 score -= (*(items[shopIn])).getcost();
 clickpower += (*(items[shopIn])).getpower();
+autospeed -= (*(items[shopIn])).getautospeed();
+autopower += (*(items[shopIn])).getautopower();
 std::cout << "Thank you for buying " << (*(items[shopIn])).getname() << std::endl;
 } else {
 std::cout << "You don't have enough points." << std::endl;
@@ -54,6 +62,15 @@ std::cout << "You don't have enough points." << std::endl;
 std::cout << "we don't have " << shopIn << std::endl;
 }
 }
+
+void autoclick() {
+while (true) {
+sleep(autospeed);
+score += autopower;
+std::cout << "autotest" << std::endl;
+}
+}
+
 
 
 // writes to data.json
@@ -110,6 +127,7 @@ void signalHandler(int signal) {
 }
 
 int main() {
+std::thread thread_obj(autoclick);
 signal(SIGINT, signalHandler);
 // check if data.json exists, make new one if not
 try {
@@ -132,7 +150,7 @@ std::cout << score << " pts" << std::endl;
         score += clickpower;
     } else if (userIn == "q") {
 	jwrite();
-	break;
+	exit(0);
 } else if (userIn == "help") {
 	if (clickpower == 0) {
 		std::cout << "delete data.json.." << std::endl;
