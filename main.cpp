@@ -65,6 +65,9 @@ autospeed -= (*(items[shopIn])).getautospeed();
 autopower += (*(items[shopIn])).getautopower();
 std::cout << "Thank you for buying " << (*(items[shopIn])).getname() << std::endl;
 items.erase(shopIn);
+for (const auto& pair : items) {
+                        std::cout << "- " << pair.first << std::endl;
+    }
 } else {
 std::cout << "You don't have enough points. (poor)" << std::endl;
 }
@@ -95,7 +98,6 @@ keys.push_back(pair.first);
 data["keys"] = keys;
 data["score"] = std::to_string(score);
 // save the hash only if it's enabled
-// I don't know how autospeed will work because trying to hash a float has been problematic in the past
 if (useSaving) {
 data["savehash"] = md5(std::to_string(score + clickpower + autospeed + autopower + hashKey));
 }
@@ -131,12 +133,15 @@ std::ifstream file("data.json");
     autopower = std::stod(data["autopower"].get<std::string>());
     std::vector<std::string> keys = data["keys"];
 
-    for (int i = 0; i < keys.size(); i++) {
-	if (items.count(keys[i])) {
-	std::cout << "has " << keys[i] << std::endl;
-} else {
-	std::cout << "not " << keys[i] << std::endl;
-}
+// check if user has already bought item (no hashing for this yet)
+for (auto it = items.begin(); it != items.end(); ) {
+    if (std::find(keys.begin(), keys.end(), it->first) == keys.end()) {
+        std::cout << "not " << it->first << std::endl;
+        it = items.erase(it);
+    } else {
+        std::cout << "has " << it->first << std::endl;
+        ++it;
+    }
 }
 // check save if useSaving is true
 if (useSaving) {
@@ -153,7 +158,7 @@ if (useSaving) {
 }
 
 // if user uses ctrl+c, save before quitting
-// ctrl+c saving is broken on windows
+// ctrl+c saving still doesn't work on windows but it doesn't do the weird thing anymore
 void signalHandler(int signal) {
 	jwrite();
 	exit(0);
