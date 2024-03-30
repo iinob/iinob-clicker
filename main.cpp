@@ -136,10 +136,8 @@ std::ifstream file("data.json");
 // check if user has already bought item (no hashing for this yet)
 for (auto it = items.begin(); it != items.end(); ) {
     if (std::find(keys.begin(), keys.end(), it->first) == keys.end()) {
-        std::cout << "not " << it->first << std::endl;
         it = items.erase(it);
     } else {
-        std::cout << "has " << it->first << std::endl;
         ++it;
     }
 }
@@ -153,8 +151,6 @@ if (useSaving) {
 		jwrite();
 	}
 }
-    // display json
-    std::cout << "jread: " << score << std::endl;
 }
 
 // if user uses ctrl+c, save before quitting
@@ -180,7 +176,7 @@ try {
 
 std::string userIn;
 
-std::cout << "press enter for more points , q to quit, help for help, s for shop" << std::endl;
+std::cout << "press enter for more points , q to save and quit, help for help, s for shop" << std::endl;
 
 // while true to keep the thingy going until the user wants to stop playing
 while (true) {
