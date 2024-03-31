@@ -29,10 +29,10 @@ bool useSaving = true;
 
 // initlize items here, make sure to put them in the hashmap so the shop can access them
 item gobump("gobump", "too deep in the files, +2 ppc", 69, 2, 0, 0);
-item clown("call-the-clown", "350 points, for a cost", -350, -10, 0, 0);
-item balls("xanders-hairy-balls", "ultimate power, +1,000,000 ppc", 10000000, 1000000, 0, 0);
-item goons("hire-goons", "Goonery co.'s finest, 150 points/5 seconds", 500, 0, 0, 150);
-item evan("evans-statues", "Weighs many kilograms, -0.05 autoclick time", 420, 0, 0.05, 0);
+item clown("call the clown", "350 points, for a cost", -350, -10, 0, 0);
+item balls("xander's hairy-balls", "ultimate power, +1,000,000 ppc", 10000000, 1000000, 0, 0);
+item goons("hire goons", "Goonery co.'s finest, 150 points/5 seconds", 500, 0, 0, 150);
+item evan("evan's statues", "Weighs many kilograms, -0.05 autoclick time", 420, 0, 0.05, 0);
 item fortnite("19 dollar fortnite card", "Who wants it? +1 ppc", 19, 1, 0, 0);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
