@@ -1,7 +1,12 @@
+# tools i use for compiling (I'm using google's cloud shell for working at school so I can't save it in /usr/local/bin
 wincompile
 compile
+objcompile
+# i used to use this as the name for the compiled binary, not anymore but i should keep it anyways
 iinobclicker
+# folder made by vscode
 .vscode
+# don't want to upload my save file lol
 *.json
 
 # Prerequisites
