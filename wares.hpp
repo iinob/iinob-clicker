@@ -2,6 +2,7 @@
 
 class item {
 	std::string name;
+	std::string desc;
 	// leave as zero for no click power bonus
 	int cost;
 	int power;
@@ -11,9 +12,10 @@ class item {
 	int autopower;
 
 	public:
-		item(std::string iname, int icost, int ipower, double iautospeed, int iautopower);
+		item(std::string iname, std::string idesc, int icost, int ipower, double iautospeed, int iautopower);
 
 		std::string getname();
+		std::string getdesc();
 		int getcost();
 		int getpower();
 		double getautospeed();

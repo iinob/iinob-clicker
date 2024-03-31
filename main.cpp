@@ -28,12 +28,12 @@ bool useSaving = true;
 
 
 // initlize items here, make sure to put them in the hashmap so the shop can access them
-item gobump("gobump", 69, 2, 0, 0);
-item clown("call-the-clown", -350, -10, 0, 0);
-item balls("xanders-hairy-balls", 10000000, 1000000, 0, 0);
-item goons("hire-goons", 500, 0, 0, 150);
-item evan("evans-statues", 420, 0, 0.05, 0);
-item fortnite("19-dollar-fortnite-card", 19, 1, 0, 0);
+item gobump("gobump", "too deep in the files, +2 ppc", 69, 2, 0, 0);
+item clown("call-the-clown", "350 points, for a cost", -350, -10, 0, 0);
+item balls("xanders-hairy-balls", "ultimate power, +1,000,000 ppc", 10000000, 1000000, 0, 0);
+item goons("hire-goons", "Goonery co.'s finest, 150 points/5 seconds", 500, 0, 0, 150);
+item evan("evans-statues", "Weighs many kilograms, -0.05 autoclick time", 420, 0, 0.05, 0);
+item fortnite("19 dollar fortnite card", "Who wants it? +1 ppc", 19, 1, 0, 0);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
@@ -54,6 +54,7 @@ std::cin >> shopIn;
 
 // check if item exists, if user wants to buy, if user has enough points to buy it
 if (items.count(shopIn)) {
+std::cout << std::endl << (*(items[shopIn])).getdesc() << std::endl;
 std::string yn;
 std::cout << (*(items[shopIn])).getname() << " costs " << (*(items[shopIn])).getcost() << " points. Do you want to buy it (y/n)? " << std::endl;
 std::cin >> yn;
@@ -176,7 +177,7 @@ try {
 
 std::string userIn;
 
-std::cout << "press enter for more points , q to save and quit, help for help, s for shop" << std::endl;
+std::cout << "press enter for more points , quit to save and quit, help for help, shop for shop, save to save, status for clicking status" << std::endl;
 
 // while true to keep the thingy going until the user wants to stop playing
 while (true) {
@@ -186,7 +187,7 @@ std::cout << score << " pts" << std::endl;
 // check user input for keyword, add points if blank
     if (userIn.empty()) {
         score += clickpower;
-    } else if (userIn == "q") {
+    } else if (userIn == "quit") {
 	jwrite();
 	exit(0);
 } else if (userIn == "help") {
@@ -194,9 +195,13 @@ std::cout << score << " pts" << std::endl;
 		std::cout << "delete data.json.." << std::endl;
 		break;
 	}
-	std::cout << "enter for points, q to quit, s for shop" << std::endl;
-} else if (userIn == "s") {
+	std::cout << "enter for points, quit to save and quit, shop for shop, save to save, status for clicking status" << std::endl;
+} else if (userIn == "shop") {
 	shop();
+} else if (userIn == "save") {
+    jwrite();
+} else if (userIn == "status") {
+    std::cout << std::endl << "Each click gives you " << clickpower << " points\nYou are automatically gaining " << autopower << " points every " << autospeed << " second(s)\n" << std::endl;
 }
 
 
