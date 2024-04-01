@@ -6,6 +6,7 @@
 #include <csignal>
 #include <thread>
 #include <unistd.h>
+#include <stdlib.h>
 #include <cmath>
 #include "wares.hpp"
 #include "hash.hpp"
@@ -35,13 +36,15 @@ item balls("xander's hairy black things", "ultimate power, +1,000,000 ppc", 1000
 item goons("hire goons", "Goonery co.'s finest, 150 points/5 seconds", 2000, 0, 0, 500);
 item evan("evan's statues", "Weighs many kilograms, -0.05 autoclick time", 420, 0, 0.05, 0);
 item fortnite("19 dollar fortnite card", "Who wants it? +1 ppc", 19, 1, 0, 0);
+item lunch("lunch concoction", "Tastes like jelly beans. Random stats", rand() % 10000, rand() % 10000, 0,0);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
-	{"xanders-hairy-balls", &balls},
+	{"xanders-hairy-black-things", &balls},
 	{"hire-goons", &goons},
 	{"evans-statues", &evan},
-	{"19-dollar-fortnite-card", &fortnite}
+	{"19-dollar-fortnite-card", &fortnite},
+	{"lunch-concoction", &lunch}
 };
 
 void shop() {
