@@ -167,6 +167,7 @@ void signalHandler(int signal) {
 	exit(0);
 }
 
+// earlier today there was some huge bug that i wanted to fix but i forgot what it was so that's probably bad
 int main() {
 // seed random number generator
 srand ( time(NULL) );
