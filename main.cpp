@@ -21,6 +21,7 @@ long long int score = 0;
 int clickpower = 1;
 int autopower = 0;
 double autospeed = 5;
+long long int levelup = 500;
 // hashkey value does not matter, it is just used to make it much harder to change the save values
 // set useSaving to true to enable modified save detection
 int hashKey = 39;
@@ -31,7 +32,7 @@ bool useSaving = true;
 item gobump("gobump", "too deep in the files, +2 ppc", 69, 2, 0, 0);
 item clown("call the clown", "350 points, for a cost", -350, -10, 0, 0);
 item balls("xander's hairy-balls", "ultimate power, +1,000,000 ppc", 10000000, 1000000, 0, 0);
-item goons("hire goons", "Goonery co.'s finest, 150 points/5 seconds", 500, 0, 0, 150);
+item goons("hire goons", "Goonery co.'s finest, 150 points/5 seconds", 2000, 0, 0, 500);
 item evan("evan's statues", "Weighs many kilograms, -0.05 autoclick time", 420, 0, 0.05, 0);
 item fortnite("19 dollar fortnite card", "Who wants it? +1 ppc", 19, 1, 0, 0);
 std::map<std::string, item*> items {
@@ -204,6 +205,11 @@ std::cout << score << " pts" << std::endl;
     std::cout << std::endl << "Each click gives you " << clickpower << " points\nYou are automatically gaining " << autopower << " points every " << autospeed << " second(s)\n" << std::endl;
 }
 
+if (score >= levelup) {
+clickpower += 2;
+levelup += 500;
+std::cout << "You levelled up! Next level up at: " << levelup << std::endl;
+}
 
 }
 
