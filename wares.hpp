@@ -17,7 +17,9 @@ class item {
 		std::string getname();
 		std::string getdesc();
 		int getcost();
+		void setcost(int icost);
 		int getpower();
+		void setpower(int ipower);
 		double getautospeed();
 		int getautopower();
 };

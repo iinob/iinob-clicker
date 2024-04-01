@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <cmath>
+#include <ctime>
 #include "wares.hpp"
 #include "hash.hpp"
 #include "json.hpp"
@@ -28,7 +29,6 @@ long long int levelup = 500;
 int hashKey = 39;
 bool useSaving = true;
 
-
 // initlize items here, make sure to put them in the hashmap so the shop can access them
 item gobump("gobump", "too deep in the files, +2 ppc", 69, 2, 0, 0);
 item clown("call the clown", "350 points, for a cost", -350, -10, 0, 0);
@@ -36,7 +36,7 @@ item balls("xander's hairy black things", "ultimate power, +1,000,000 ppc", 1000
 item goons("hire goons", "Goonery co.'s finest, 150 points/5 seconds", 2000, 0, 0, 500);
 item evan("evan's statues", "Weighs many kilograms, -0.05 autoclick time", 420, 0, 0.05, 0);
 item fortnite("19 dollar fortnite card", "Who wants it? +1 ppc", 19, 1, 0, 0);
-item lunch("lunch concoction", "Tastes like jelly beans. Random stats", rand() % 10000, rand() % 10000, 0,0);
+item lunch("lunch concoction", "Tastes like jelly beans. Random stats", 0, 0, 0,0);
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
@@ -48,6 +48,8 @@ std::map<std::string, item*> items {
 };
 
 void shop() {
+lunch.setcost((rand() % 20000) - 10000);
+lunch.setpower((rand() % 11500) - 1500);
 std::cout << "welcome to the shop\nyou have " << score << " points.\nWhat would you like to buy? " << std::endl;
 // display hashmap keys
 for (const auto& pair : items) {
@@ -166,6 +168,9 @@ void signalHandler(int signal) {
 }
 
 int main() {
+// seed random number generator
+srand ( time(NULL) );
+
 // start autoclick thread
 std::thread thread_obj(autoclick);
 // initialize signal handler
@@ -210,7 +215,7 @@ std::cout << score << " pts" << std::endl;
 
 if (score >= levelup) {
 clickpower += 2;
-levelup += 500;
+levelup *= 2;
 std::cout << "You levelled up! Next level up at: " << levelup << std::endl;
 }
 

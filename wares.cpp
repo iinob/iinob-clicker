@@ -24,8 +24,16 @@ int item::getcost() {
 	return cost;
 }
 
+void item::setcost(int icost) {
+	cost = icost;
+}
+
 int item::getpower() {
 	return power;
+}
+
+void item::setpower(int ipower) {
+	power = ipower;
 }
 
 double item::getautospeed() {
