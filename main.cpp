@@ -38,6 +38,9 @@ item evan("Evan's Statues", "Weighs many kilograms, -0.05 autoclick time", 420, 
 item fortnite("19 Dollar Fortnite Card", "Who wants it? +1 ppc", 19, 1, 0, 0);
 item lunch("Lunch Concoction", "Tastes like jelly beans. Random stats", 0, 0, 0,0);
 item toughman("Tough Man", "he can lift hotdogs and elephants, -0.5 autoclick time, autoclicks for 900 points", 8000, 0, 0.5, 900);
+item gaykeeping("Gaykeeping", "tripod will not see this coming, -3 seconds autoclick time", 6969, 0, 3, -100);
+item donate("Donating to the hobos", "spare change?", 1, 0, -0.01, 0);
+
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
@@ -46,8 +49,11 @@ std::map<std::string, item*> items {
 	{"evans-statues", &evan},
 	{"19-dollar-fortnite-card", &fortnite},
 	{"lunch-concoction", &lunch},
-	{"tough-man", &toughman}
+	{"tough-man", &toughman},
+	{"gaykeeping", &gaykeeping},
+	{"donate", &donate}
 };
+std::vector<std::string> rebuyable({"donate"});
 
 void shop() {
 lunch.setcost((rand() % 20000) - 10000);
@@ -73,10 +79,9 @@ clickpower += (*(items[shopIn])).getpower();
 autospeed -= (*(items[shopIn])).getautospeed();
 autopower += (*(items[shopIn])).getautopower();
 std::cout << "Thank you for buying " << (*(items[shopIn])).getname() << std::endl;
+if (count(rebuyable.begin(), rebuyable.end(), shopIn) == 0) {
 items.erase(shopIn);
-for (const auto& pair : items) {
-                        std::cout << "- " << pair.first << std::endl;
-    }
+}
 } else {
 std::cout << "You don't have enough points. (poor)" << std::endl;
 }
