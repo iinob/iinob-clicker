@@ -31,7 +31,7 @@ bool useSaving = true;
 
 // initlize items here, make sure to put them in the hashmap so the shop can access them
 item gobump("gobump", "too deep in the files, +2 ppc", 69, 2, 0, 0);
-item clown("Call The Clown", "350 points, for a cost", -350, -10, 0, 0);
+item clown("Call The Clown", "15000 points, for a cost", -15000, -20, 0, 0);
 item balls("Xander's Hairy Black Things", "ultimate power, +1,000,000 ppc", 10000000, 1000000, 0, 0);
 item goons("Hire Goons", "Goonery co.'s finest, autoclicks for 500 points", 2000, 0, 0, 500);
 item evan("Evan's Statues", "Weighs many kilograms, -0.05 autoclick time", 420, 0, 0.05, 0);
@@ -40,7 +40,11 @@ item lunch("Lunch Concoction", "Tastes like jelly beans. Random stats", 0, 0, 0,
 item toughman("Tough Man", "he can lift hotdogs and elephants, -0.5 autoclick time, autoclicks for 900 points", 8000, 0, 0.5, 900);
 item gaykeeping("Gaykeeping", "tripod will not see this coming, -3 seconds autoclick time", 6969, 0, 3, -100);
 item donate("Donating to the hobos", "spare change?", 1, 0, -0.01, 0);
+item groupproject("Group Project", "better find the answer key", 0, -9999999, 999999999, -99999999);
+item discord("New Monthly Discord Server", "why do we keep making these? +5 ppc", 7500, 5, 0, 0);
+item subura("In Subura", "intrat pompeii, +650 autoclick power", 2479, 0, 0, 650);
 
+// put dashes or smth between words or it'll segfault :)
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
@@ -51,9 +55,12 @@ std::map<std::string, item*> items {
 	{"lunch-concoction", &lunch},
 	{"tough-man", &toughman},
 	{"gaykeeping", &gaykeeping},
-	{"donate", &donate}
+	{"donate", &donate},
+	{"group-project", &groupproject},
+	{"new-server", &discord},
+	{"in-subura", &subura}
 };
-std::vector<std::string> rebuyable({"donate"});
+std::vector<std::string> rebuyable({"donate", "new-server"});
 
 void shop() {
 lunch.setcost((rand() % 20000) - 10000);
