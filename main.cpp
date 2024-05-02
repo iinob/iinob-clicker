@@ -16,6 +16,12 @@
 // json function made by Niels Lohmann
 // hash function made by Frank Thilo
 
+/* NOTES:
+some of the formatting is wonky because I'm using nano over ssh to make this :)
+this isn't meant to be a GOOD game, it's mainly something to do when I'm bored at school
+most of the items are stupid inside jokes from my friend group
+*/
+
 using json = nlohmann::json;
 
 // init saved variables here
@@ -24,9 +30,15 @@ int clickpower = 1;
 int autopower = 0;
 double autospeed = 5;
 long long int levelup = 500;
-// hashkey value does not matter, it is just used to make it much harder to change the save values
-// set useSaving to true to enable modified save detection
-int hashKey = 39;
+/*
+hashkey value does not matter, it is just used to make it much harder to change the save values
+set useSaving to true to enable modified save detection
+doesn't save unlocked items yet, might add that eventually but it's not that important to me right now
+hashKey is NOT consistant between commits, and it can and will change randomly
+same with useSaving, sometimes I turn it off for development reasons and forget to turn it back on
+I'll try to turn it back on for releases though, along with a new hashKey
+*/
+int hashKey = 1;
 bool useSaving = true;
 
 // initlize items here, make sure to put them in the hashmap so the shop can access them
@@ -43,6 +55,7 @@ item donate("Donating to the hobos", "spare change?", 1, 0, -0.01, 0);
 item groupproject("Group Project", "better find the answer key", 0, -9999999, 999999999, -99999999);
 item discord("New Monthly Discord Server", "why do we keep making these? +5 ppc", 7500, 5, 0, 0);
 item subura("In Subura", "intrat pompeii, +650 autoclick power", 2479, 0, 0, 650);
+item global("Current Event", "What's your opinion on tornadoes? -1 second autoclick time", 4275, 0, 1, 0);
 
 // put dashes or smth between words or it'll segfault :)
 std::map<std::string, item*> items {
@@ -58,7 +71,8 @@ std::map<std::string, item*> items {
 	{"donate", &donate},
 	{"group-project", &groupproject},
 	{"new-server", &discord},
-	{"in-subura", &subura}
+	{"in-subura", &subura},
+	{"current-event", &global}
 };
 std::vector<std::string> rebuyable({"donate", "new-server"});
 
@@ -83,7 +97,12 @@ if (yn == "y") {
 if (score >= (*(items[shopIn])).getcost()) {
 score -= (*(items[shopIn])).getcost();
 clickpower += (*(items[shopIn])).getpower();
+if (autospeed > (*(items[shopIn])).getautospeed()) {
 autospeed -= (*(items[shopIn])).getautospeed();
+} else {
+std::cout << "autoclick speed cap reached, adding to click power" << std::endl;
+clickpower += int((*(items[shopIn])).getautospeed());
+}
 autopower += (*(items[shopIn])).getautopower();
 std::cout << "Thank you for buying " << (*(items[shopIn])).getname() << std::endl;
 if (count(rebuyable.begin(), rebuyable.end(), shopIn) == 0) {
@@ -120,11 +139,12 @@ data["keys"] = keys;
 data["score"] = std::to_string(score);
 // save the hash only if it's enabled
 if (useSaving) {
-data["savehash"] = md5(std::to_string(score + clickpower + autospeed + autopower + hashKey));
+data["savehash"] = md5(std::to_string(score + clickpower + autospeed + autopower + levelup + hashKey));
 }
 data["power"] = std::to_string(clickpower);
 data["autospeed"] = std::to_string(autospeed);
 data["autopower"] = std::to_string(autopower);
+data["levelup"] = std::to_string(levelup);
 std::ofstream file("data.json");
     file << std::setw(4) << data << std::endl;
     file.close();
@@ -152,6 +172,7 @@ std::ifstream file("data.json");
     clickpower = std::stod(data["power"].get<std::string>());
     autospeed = std::stod(data["autospeed"].get<std::string>());
     autopower = std::stod(data["autopower"].get<std::string>());
+    levelup = std::stoi(data["levelup"].get<std::string>());
     std::vector<std::string> keys = data["keys"];
 
 // check if user has already bought item (no hashing for this yet)
@@ -165,7 +186,7 @@ for (auto it = items.begin(); it != items.end(); ) {
 // check save if useSaving is true
 if (useSaving) {
     std::string savehash = data["savehash"];
-	if (md5(std::to_string(score + clickpower + autospeed + autopower + hashKey)) != savehash) {
+	if (md5(std::to_string(score + clickpower + autospeed + autopower + levelup + hashKey)) != savehash) {
 		std::cout << "\nchanging data.json is against the rules\n\nBIDEN BLAST!!!" << std::endl;
 		score = 0;
 		clickpower = 0;
