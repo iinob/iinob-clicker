@@ -126,7 +126,7 @@ score += autopower;
 }
 
 
-// writes to data.json
+// writes to nobsave.json
 void jwrite() {
 //autospeed = std::round(autospeed * 100) / 100;
 std::cout << "\nsaving...\n";
@@ -145,7 +145,7 @@ data["power"] = std::to_string(clickpower);
 data["autospeed"] = std::to_string(autospeed);
 data["autopower"] = std::to_string(autopower);
 data["levelup"] = std::to_string(levelup);
-std::ofstream file("data.json");
+std::ofstream file("nobsave.json");
     file << std::setw(4) << data << std::endl;
     file.close();
 
@@ -153,7 +153,7 @@ std::ofstream file("data.json");
 
 // reads data.json
 void jread() {
-std::ifstream file("data.json");
+std::ifstream file("nobsave.json");
 
     // check if file opens
     if (!file.is_open()) {
@@ -187,7 +187,7 @@ for (auto it = items.begin(); it != items.end(); ) {
 if (useSaving) {
     std::string savehash = data["savehash"];
 	if (md5(std::to_string(score + clickpower + autospeed + autopower + levelup + hashKey)) != savehash) {
-		std::cout << "\nchanging data.json is against the rules\n\nBIDEN BLAST!!!" << std::endl;
+		std::cout << "\nchanging nobsave.json is against the rules\n\nBIDEN BLAST!!!" << std::endl;
 		score = 0;
 		clickpower = 0;
 		jwrite();
@@ -211,12 +211,12 @@ srand ( time(NULL) );
 std::thread thread_obj(autoclick);
 // initialize signal handler
 signal(SIGINT, signalHandler);
-// check if data.json exists, make new one if not
+// check if nobsave.json exists, make new one if not
 try {
 	jread();
 } catch(...) {
 	// runs on any error, may be bad under very specific circumstances
-	std::cout << "Generating new data.json..." << std::endl;
+	std::cout << "Generating new nobsave.json..." << std::endl;
 	jwrite();
 }
 
@@ -237,7 +237,7 @@ std::cout << score << " pts" << std::endl;
 	exit(0);
 } else if (userIn == "help") {
 	if (clickpower == 0) {
-		std::cout << "delete data.json.." << std::endl;
+		std::cout << "delete nobsave.json.." << std::endl;
 		break;
 	}
 	std::cout << "enter for points, quit to save and quit, shop for shop, save to save, status for clicking status" << std::endl;
