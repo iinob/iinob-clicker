@@ -187,7 +187,7 @@ for (auto it = items.begin(); it != items.end(); ) {
 if (useSaving) {
     std::string savehash = data["savehash"];
 	if (md5(std::to_string(score + clickpower + autospeed + autopower + levelup + hashKey)) != savehash) {
-		std::cout << "\nchanging nobsave.json is against the rules\n\nBIDEN BLAST!!!" << std::endl;
+		std::cout << "\nchanging nobsave.json is against the rules\n\nTRUMP THUMP (since joe biden died of ligma)!" << std::endl;
 		score = 0;
 		clickpower = 0;
 		jwrite();
