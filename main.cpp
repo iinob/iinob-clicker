@@ -12,9 +12,10 @@
 #include "wares.hpp"
 #include "hash.hpp"
 #include "json.hpp"
+// yep, that's why it's 4mb
 
-// json function made by Niels Lohmann
-// hash function made by Frank Thilo
+// !!! json function made by Niels Lohmann !!!
+// !!! hash function made by Frank Thilo !!!
 
 /* NOTES:
 some of the formatting is wonky because I'm using nano over ssh to make this :)
@@ -25,6 +26,7 @@ most of the items are stupid inside jokes from my friend group
 using json = nlohmann::json;
 
 // init saved variables here
+// idk how good of a practice long long ints are but I don't really care all too much
 long long int score = 0;
 int clickpower = 1;
 int autopower = 0;
@@ -32,14 +34,13 @@ double autospeed = 5;
 long long int levelup = 500;
 /*
 hashkey value does not matter, it is just used to make it much harder to change the save values
-set useSaving to true to enable modified save detection
+set useSaveTamperPrevention to true to enable modified save detection
 doesn't save unlocked items yet, might add that eventually but it's not that important to me right now
-hashKey is NOT consistant between commits, and it can and will change randomly
-same with useSaving, sometimes I turn it off for development reasons and forget to turn it back on
-I'll try to turn it back on for releases though, along with a new hashKey
+hashKey is NOT consistant between commits, and it can and will change randomly (lol)
+same with useSaveTamperPrevention, sometimes I turn it off for development reasons and forget to turn it back on
 */
 int hashKey = 1;
-bool useSaving = true;
+bool useSaveTamperPrevention = true;
 
 // initlize items here, make sure to put them in the hashmap so the shop can access them
 item gobump("gobump", "too deep in the files, +2 ppc", 69, 2, 0, 0);
@@ -57,7 +58,8 @@ item discord("New Monthly Discord Server", "why do we keep making these? +5 ppc"
 item subura("In Subura", "intrat pompeii, +650 autoclick power", 2479, 0, 0, 650);
 item global("Current Event", "What's your opinion on tornadoes? -1 second autoclick time", 4275, 0, 1, 0);
 
-// put dashes or smth between words or it'll segfault :)
+// map out names and pointers for shop display purposes
+// put dashes between words or it'll segfault :)
 std::map<std::string, item*> items {
 	{"gobump", &gobump},
 	{"call-the-clown", &clown},
@@ -77,8 +79,10 @@ std::map<std::string, item*> items {
 std::vector<std::string> rebuyable({"donate", "new-server"});
 
 void shop() {
+// init random cost and power
 lunch.setcost((rand() % 20000) - 10000);
 lunch.setpower((rand() % 11500) - 1500);
+
 std::cout << "welcome to the shop\nyou have " << score << " points.\nWhat would you like to buy? " << std::endl;
 // display hashmap keys
 for (const auto& pair : items) {
@@ -88,6 +92,7 @@ std::string shopIn;
 std::cin >> shopIn;
 
 // check if item exists, if user wants to buy, if user has enough points to buy it
+// I really should clean up this function
 if (items.count(shopIn)) {
 std::cout << std::endl << (*(items[shopIn])).getdesc() << std::endl;
 std::string yn;
@@ -128,7 +133,6 @@ score += autopower;
 
 // writes to nobsave.json
 void jwrite() {
-//autospeed = std::round(autospeed * 100) / 100;
 std::cout << "\nsaving...\n";
 json data;
 std::vector<std::string> keys;
@@ -137,21 +141,23 @@ keys.push_back(pair.first);
 }
 data["keys"] = keys;
 data["score"] = std::to_string(score);
+
 // save the hash only if it's enabled
-if (useSaving) {
+if (useSaveTamperPrevention) {
 data["savehash"] = md5(std::to_string(score + clickpower + autospeed + autopower + levelup + hashKey));
 }
+
 data["power"] = std::to_string(clickpower);
 data["autospeed"] = std::to_string(autospeed);
 data["autopower"] = std::to_string(autopower);
 data["levelup"] = std::to_string(levelup);
-std::ofstream file("nobsave.json");
-    file << std::setw(4) << data << std::endl;
-    file.close();
 
+std::ofstream file("nobsave.json");
+file << std::setw(4) << data << std::endl;
+file.close();
 }
 
-// reads data.json
+// reads data.json and initializes key game variables
 void jread() {
 std::ifstream file("nobsave.json");
 
@@ -183,8 +189,9 @@ for (auto it = items.begin(); it != items.end(); ) {
         ++it;
     }
 }
-// check save if useSaving is true
-if (useSaving) {
+
+// check save if useSaveTamperPrevention is true
+if  (useSaveTamperPrevention) {
     std::string savehash = data["savehash"];
 	if (md5(std::to_string(score + clickpower + autospeed + autopower + levelup + hashKey)) != savehash) {
 		std::cout << "\nchanging nobsave.json is against the rules\n\nTRUMP THUMP (since joe biden died of ligma)!" << std::endl;
@@ -196,21 +203,23 @@ if (useSaving) {
 }
 
 // if user uses ctrl+c, save before quitting
-// ctrl+c saving still doesn't work on windows but it doesn't do the weird thing anymore
+// ctrl+c saving only works on linux
 void signalHandler(int signal) {
 	jwrite();
 	exit(0);
 }
 
-// earlier today there was some huge bug that i wanted to fix but i forgot what it was so that's probably bad
 int main() {
 // seed random number generator
+
 srand ( time(NULL) );
 
 // start autoclick thread
 std::thread thread_obj(autoclick);
+
 // initialize signal handler
 signal(SIGINT, signalHandler);
+
 // check if nobsave.json exists, make new one if not
 try {
 	jread();
