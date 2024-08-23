@@ -214,7 +214,11 @@ int main() {
 
 srand ( time(NULL) );
 
-// start autoclick thread
+/*
+start autoclick thread
+using multithreading for this is absolutely stupid but it works so
+don't tell me how to code
+*/
 std::thread thread_obj(autoclick);
 
 // initialize signal handler
