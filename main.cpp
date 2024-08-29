@@ -83,10 +83,10 @@ void shop() {
 lunch.setcost((rand() % 20000) - 10000);
 lunch.setpower((rand() % 11500) - 1500);
 
-std::cout << "welcome to the shop\nyou have " << score << " points.\nWhat would you like to buy? " << std::endl;
+std::cout << "welcome to the shop\nyou have " << score << " points.\nWhat would you like to buy?\n";
 // display hashmap keys
 for (const auto& pair : items) {
-                        std::cout << "- " << pair.first << std::endl;
+                        std::cout << "- " << pair.first << "\n";
     }
 std::string shopIn;
 std::cin >> shopIn;
@@ -94,9 +94,9 @@ std::cin >> shopIn;
 // check if item exists, if user wants to buy, if user has enough points to buy it
 // I really should clean up this function
 if (items.count(shopIn)) {
-std::cout << std::endl << (*(items[shopIn])).getdesc() << std::endl;
+std::cout << "\n" << (*(items[shopIn])).getdesc() << "\n";
 std::string yn;
-std::cout << (*(items[shopIn])).getname() << " costs " << (*(items[shopIn])).getcost() << " points. Do you want to buy it (y/n)? " << std::endl;
+std::cout << (*(items[shopIn])).getname() << " costs " << (*(items[shopIn])).getcost() << " points. Do you want to buy it (y/n)?\n";
 std::cin >> yn;
 if (yn == "y") {
 if (score >= (*(items[shopIn])).getcost()) {
@@ -105,20 +105,20 @@ clickpower += (*(items[shopIn])).getpower();
 if (autospeed > (*(items[shopIn])).getautospeed()) {
 autospeed -= (*(items[shopIn])).getautospeed();
 } else {
-std::cout << "autoclick speed cap reached, adding to click power" << std::endl;
+std::cout << "autoclick speed cap reached, adding to click power\n";
 clickpower += int((*(items[shopIn])).getautospeed());
 }
 autopower += (*(items[shopIn])).getautopower();
-std::cout << "Thank you for buying " << (*(items[shopIn])).getname() << std::endl;
+std::cout << "Thank you for buying " << (*(items[shopIn])).getname() << "\n";
 if (count(rebuyable.begin(), rebuyable.end(), shopIn) == 0) {
 items.erase(shopIn);
 }
 } else {
-std::cout << "You don't have enough points. (poor)" << std::endl;
+std::cout << "You don't have enough points. (poor)\n";
 }
 }
 } else {
-std::cout << "we don't have " << shopIn << std::endl;
+std::cout << "we don't have " << shopIn << "\n";
 }
 }
 
@@ -153,7 +153,7 @@ data["autopower"] = std::to_string(autopower);
 data["levelup"] = std::to_string(levelup);
 
 std::ofstream file("nobsave.json");
-file << std::setw(4) << data << std::endl;
+file << std::setw(4) << data << "\n";
 file.close();
 }
 
@@ -163,7 +163,7 @@ std::ifstream file("nobsave.json");
 
     // check if file opens
     if (!file.is_open()) {
-        std::cerr << "Failed to open file." << std::endl;
+        std::cerr << "Failed to open file.\n";
     }
 
     // grab json
@@ -194,7 +194,7 @@ for (auto it = items.begin(); it != items.end(); ) {
 if  (useSaveTamperPrevention) {
     std::string savehash = data["savehash"];
 	if (md5(std::to_string(score + clickpower + autospeed + autopower + levelup + hashKey)) != savehash) {
-		std::cout << "\nchanging nobsave.json is against the rules\n\nTRUMP THUMP (since joe biden died of ligma)!" << std::endl;
+		std::cout << "\nchanging nobsave.json is against the rules\n\nTRUMP THUMP (since joe biden died of ligma)!\n";
 		score = 0;
 		clickpower = 0;
 		jwrite();
@@ -229,17 +229,17 @@ try {
 	jread();
 } catch(...) {
 	// runs on any error, may be bad under very specific circumstances
-	std::cout << "Generating new nobsave.json..." << std::endl;
+	std::cout << "Generating new nobsave.json...\n";
 	jwrite();
 }
 
 std::string userIn;
 
-std::cout << "press enter for more points , quit to save and quit, help for help, shop for shop, save to save, status for clicking status" << std::endl;
+std::cout << "press enter for more points , quit to save and quit, help for help, shop for shop, save to save, status for clicking status\n";
 
 // while true to keep the thingy going until the user wants to stop playing
 while (true) {
-std::cout << score << " pts" << std::endl;
+std::cout << score << " pts\n";
    std::getline(std::cin, userIn);
 
 // check user input for keyword, add points if blank
@@ -250,22 +250,22 @@ std::cout << score << " pts" << std::endl;
 	exit(0);
 } else if (userIn == "help") {
 	if (clickpower == 0) {
-		std::cout << "delete nobsave.json.." << std::endl;
+		std::cout << "delete nobsave.json..\n";
 		break;
 	}
-	std::cout << "enter for points, quit to save and quit, shop for shop, save to save, status for clicking status" << std::endl;
+	std::cout << "enter for points, quit to save and quit, shop for shop, save to save, status for clicking status\n";
 } else if (userIn == "shop") {
 	shop();
 } else if (userIn == "save") {
     jwrite();
 } else if (userIn == "status") {
-    std::cout << std::endl << "Each click gives you " << clickpower << " points\nYou are automatically gaining " << autopower << " points every " << autospeed << " second(s)\n" << std::endl;
+    std::cout << "\nEach click gives you " << clickpower << " points\nYou are automatically gaining " << autopower << " points every " << autospeed << " second(s)\n\n";
 }
 
 if (score >= levelup) {
 clickpower += 2;
 levelup *= 2;
-std::cout << "You levelled up! Next level up at: " << levelup << std::endl;
+std::cout << "You levelled up! Next level up at: " << levelup << "\n";
 }
 
 }
